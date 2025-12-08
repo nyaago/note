@@ -55,7 +55,11 @@ struct ContentView: View {
     }
 }
 
+private extension ContentView {
+    
+}
+
 #Preview {
     ContentView()
-        .modelContainer(for: Note.self, inMemory: true)
+        .modelContainer(SampleNote.previewContainer)
 }
