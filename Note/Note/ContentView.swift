@@ -14,26 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(notes) { note in
-                    NavigationLink {
-                        Text("Item at \(note.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(note.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteNotes)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addNote) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
+            NoteListView()
         } detail: {
             Text("Select an item")
         }
