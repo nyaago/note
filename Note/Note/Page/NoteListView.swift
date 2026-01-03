@@ -23,16 +23,15 @@ struct NoteItemView: View {
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.navigationRouter) private var navigationRouter
     @Query private var notes: [Note]
     
     var body: some View {
         List {
             ForEach(notes) { note in
-                NavigationLink {
-                    Text("Item at \(note.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                } label: {
+                NavigationLink(value :note, label: {
                     NoteItemView(note: note)
-                }
+                })
             }
             .onDelete(perform: deleteNotes)
         }
@@ -46,11 +45,17 @@ struct NoteListView: View {
                 }
             }
         }
+        .navigationDestination(for: Note.self, destination:  { note in
+            EditNoteItemView(note: note)
+        
+        })
+        
     }
     private func addNote() {
         withAnimation {
-            let newItem = Note(content: "dummy")
+            let newItem = Note(content: "note")
             modelContext.insert(newItem)
+            navigationRouter.path.append(newItem)
         }
     }
 
