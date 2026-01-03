@@ -8,6 +8,19 @@
 import SwiftUI
 import SwiftData
 
+struct NoteItemView: View {
+    let note: Note
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(note.content)
+                .modifier(ListItemContentModifier())
+            Text(note.formatedTimestamp)
+                .modifier(ListItemNoteModifier())
+        }
+    }
+}
+
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var notes: [Note]
@@ -18,7 +31,7 @@ struct NoteListView: View {
                 NavigationLink {
                     Text("Item at \(note.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
                 } label: {
-                    Text(note.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                    NoteItemView(note: note)
                 }
             }
             .onDelete(perform: deleteNotes)

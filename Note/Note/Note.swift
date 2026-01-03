@@ -20,4 +20,18 @@ final class Note {
         self.createdAt = Date()
         self.content = content
     }
+    
+    var formatedTimestamp: String {
+        get {
+            formatDate(date: timestamp)
+        }
+    }
+    
+    func formatDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: date)
+    }
 }
+

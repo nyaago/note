@@ -19,21 +19,6 @@ struct ContentView: View {
             Text("Select an item")
         }
     }
-
-    private func addNote() {
-        withAnimation {
-            let newItem = Note(content: "dummy")
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteNotes(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(notes[index])
-            }
-        }
-    }
 }
 
 private extension ContentView {
