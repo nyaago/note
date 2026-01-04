@@ -36,14 +36,8 @@ struct NoteListView: View {
             .onDelete(perform: deleteNotes)
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
-            }
-            ToolbarItem {
-                Button(action: addNote) {
-                    Label("Add Item", systemImage: "plus")
-                }
-            }
+            editToolbarContent
+            addToolbarContent
         }
         .navigationDestination(for: Note.self, destination:  { note in
             EditNoteItemView(note: note)
@@ -63,6 +57,20 @@ struct NoteListView: View {
         withAnimation {
             for index in offsets {
                 modelContext.delete(notes[index])
+            }
+        }
+    }
+    
+    private var editToolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            EditButton()
+        }
+    }
+    
+    private var addToolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button(action: addNote) {
+                Label("Add Item", systemImage: "plus")
             }
         }
     }
