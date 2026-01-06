@@ -10,8 +10,8 @@ import SwiftData
 
 @Model
 final class Note {
-    private(set) var uuid = UUID()
-    private(set) var createdAt: Date = Date()
+    var uuid = UUID()
+    var createdAt: Date = Date()
     var timestamp: Date = Date()
     var content: String = ""
     
