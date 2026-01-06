@@ -11,8 +11,8 @@ import SwiftData
 @Model
 final class Note {
     private(set) var uuid = UUID()
-    private(set) var createdAt: Date
-    private(set) var timestamp: Date
+    private(set) var createdAt: Date = Date()
+    var timestamp: Date = Date()
     var content: String = ""
     
     init(content: String) {
@@ -33,5 +33,7 @@ final class Note {
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
     }
+    
+    
 }
 
