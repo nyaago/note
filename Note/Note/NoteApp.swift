@@ -13,6 +13,7 @@ struct NoteApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Note.self,
+            Folder.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
