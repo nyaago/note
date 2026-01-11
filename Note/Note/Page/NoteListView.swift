@@ -52,6 +52,10 @@ struct NoteListView: View {
             navigationRouter.path.append(newItem)
         }
     }
+    
+    private func doNothing() {
+        
+    }
 
     private func deleteNotes(offsets: IndexSet) {
         withAnimation {
@@ -68,9 +72,14 @@ struct NoteListView: View {
     }
     
     private var addToolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button(action: addNote) {
-                Label("Add Item", systemImage: "plus")
+        ToolbarItemGroup(placement: .bottomBar) {
+            HStack()  {
+                Button(action: doNothing) {
+                }
+                Button(action: addNote) {
+                    Label("Add Item", systemImage: "square.and.pencil")
+                        
+                }.frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }
