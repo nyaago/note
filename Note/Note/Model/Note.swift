@@ -16,10 +16,11 @@ final class Note {
     var content: String = ""
     var folder: Folder?
     
-    init(content: String) {
+    init(content: String, folder: Folder?) {
         self.timestamp = Date()
         self.createdAt = Date()
         self.content = content
+        self.folder = folder
     }
     
     var formatedTimestamp: String {

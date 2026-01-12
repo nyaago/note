@@ -18,13 +18,27 @@ struct NoteItemView: View {
             Text(note.formatedTimestamp)
                 .modifier(ListItemNoteModifier())
         }
+        .modifier(ListItemViewModifier())
     }
 }
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.navigationRouter) private var navigationRouter
+    
+    @State private var creatingFolder = false
+    
     @Query private var notes: [Note]
+    
+    private var folder: Folder?
+    
+    init() {
+        self.folder = nil
+    }
+    
+    init(folder: Folder?) {
+        self.folder = folder
+    }
     
     var body: some View {
         List {
@@ -41,15 +55,23 @@ struct NoteListView: View {
         }
         .navigationDestination(for: Note.self, destination:  { note in
             EditNoteItemView(note: note)
-        
         })
-        
+        .navigationDestination(isPresented: $creatingFolder, destination: {
+            NewFolderView()
+        })
+
     }
     private func addNote() {
         withAnimation {
-            let newItem = Note(content: "note")
+            let newItem = Note(content: "note", folder: folder)
             modelContext.insert(newItem)
             navigationRouter.path.append(newItem)
+        }
+    }
+    
+    private func addFolder() {
+        withAnimation {
+            creatingFolder = true
         }
     }
     
@@ -74,12 +96,14 @@ struct NoteListView: View {
     private var addToolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .bottomBar) {
             HStack()  {
-                Button(action: doNothing) {
+                Button(action: addFolder) {
+                    Label("Add Folder", systemImage: "folder.badge.plus")
+                        
                 }
                 Button(action: addNote) {
                     Label("Add Item", systemImage: "square.and.pencil")
-                        
-                }.frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }

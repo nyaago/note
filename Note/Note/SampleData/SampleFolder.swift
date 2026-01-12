@@ -1,24 +1,24 @@
 //
-//  SampleNote.swift
+//  SampleFolder.swift
 //  Note
 //
-//  Created by nyaago on 2025/12/08.
+//  Created by nyaago on 2026/01/12.
 //
 
 import SwiftData
 
 @MainActor
-class SampleNote {
+class SampleFolder {
     static let previewContainer: ModelContainer = {
         do {
             let config = ModelConfiguration(isStoredInMemoryOnly: true)
             let container = try ModelContainer(
-                for: Note.self,
+                for: Folder.self,
                 configurations: config
             )
             for i in 0..<10 {
-                var note = Note(content: "note content \(i+1) ", folder: nil)
-                container.mainContext.insert(note)
+                var folder = Folder(name: "folder \(i+1) ")
+                container.mainContext.insert(folder)
             }
             return container
         } catch {

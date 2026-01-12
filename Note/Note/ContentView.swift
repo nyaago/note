@@ -16,7 +16,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack(path: $navigationRouter.path) {
-            NoteListView()
+            FolderListView()
         }
         .environment(\.navigationRouter, navigationRouter)
     }
@@ -28,5 +28,5 @@ private extension ContentView {
 
 #Preview {
     ContentView()
-        .modelContainer(SampleNote.previewContainer)
+        .modelContainer(SampleFolder.previewContainer)
 }
