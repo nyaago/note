@@ -35,4 +35,8 @@ final class Note {
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
     }
+    
+    var isEmpty: Bool {
+        content.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 }

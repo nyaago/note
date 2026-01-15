@@ -72,10 +72,28 @@ struct EditNoteItemView: View {
         }
     }
     
+    private func deleteContent() {
+        guard let note = self.note else {
+            return
+        }
+        self.modelContext.delete(note)
+    }
+    
+    private var isEmpty: Bool {
+        guard let note = self.note else {
+            return false
+        }
+        return note.isEmpty
+    }
+    
     private func changeNoteContentAndDismiss() {
         changeNoteContent()
+        if isEmpty {
+            deleteContent()
+        }
         dismiss()
     }
+    
 }
 
 #Preview {

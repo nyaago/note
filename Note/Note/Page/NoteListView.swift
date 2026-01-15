@@ -63,7 +63,7 @@ struct NoteListView: View {
     }
     private func addNote() {
         withAnimation {
-            let newItem = Note(content: "note", folder: folder)
+            let newItem = Note(content: "", folder: folder)
             modelContext.insert(newItem)
             navigationRouter.path.append(newItem)
         }
