@@ -49,6 +49,10 @@ struct FolderListView: View {
                 })
             }
         }
+        .toolbar {
+            editToolbarContent
+            addToolbarContent
+        }
         .navigationTitle("Folders")
         .navigationDestination(for: Folder.self, destination: { folder in
             NoteListView(folder: folder)
@@ -56,7 +60,49 @@ struct FolderListView: View {
         .navigationDestination(for: AllNotesFolder.self, destination: { folder in
             NoteListView(folder: nil)
         })
+        .navigationDestination(for: Note.self, destination:  { note in
+            EditNoteItemView(note: note)
+        })
+        .navigationDestination(isPresented: $creatingFolder, destination: {
+            NewFolderView()
+        })
     }
+    
+    private func addNote() {
+        withAnimation {
+            let newItem = Note(content: "", folder: nil)
+            modelContext.insert(newItem)
+            navigationRouter.path.append(newItem)
+        }
+    }
+    
+    private func addFolder() {
+        withAnimation {
+            creatingFolder = true
+        }
+    }
+    
+    private var editToolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            EditButton()
+        }
+    }
+    
+    private var addToolbarContent: some ToolbarContent {
+        ToolbarItemGroup(placement: .bottomBar) {
+            HStack()  {
+                Button(action: addFolder) {
+                    Label("Add Folder", systemImage: "folder.badge.plus")
+                        
+                }
+                Button(action: addNote) {
+                    Label("Add Item", systemImage: "square.and.pencil")
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+        }
+    }
+
 }
 
 #Preview {

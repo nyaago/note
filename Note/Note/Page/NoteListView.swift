@@ -33,11 +33,19 @@ struct NoteListView: View {
     private var folder: Folder?
     
     init() {
-        self.folder = nil
+        self.init(folder: nil)
     }
     
     init(folder: Folder?) {
         self.folder = folder
+        if let unwrappedFolder = folder {
+            let uuid = unwrappedFolder.uuid
+            let predicate = #Predicate<Note> { $0.folder?.uuid == uuid }
+            _notes = Query(filter: predicate, sort: \Note.timestamp, order: .reverse)
+        }
+        else {
+            _notes = Query(sort: \Note.timestamp, order: .reverse)
+        }
     }
     
     var body: some View {
@@ -96,10 +104,8 @@ struct NoteListView: View {
     private var addToolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .bottomBar) {
             HStack()  {
-                Button(action: addFolder) {
-                    Label("Add Folder", systemImage: "folder.badge.plus")
-                        
-                }
+                Button(action: doNothing) {
+                 }
                 Button(action: addNote) {
                     Label("Add Item", systemImage: "square.and.pencil")
                 }
