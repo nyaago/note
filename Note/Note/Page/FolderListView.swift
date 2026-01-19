@@ -37,6 +37,10 @@ struct FolderListView: View {
     
     @Query private var folders: [Folder]
 
+    init() {
+        let sortDescriptions = Folder.defaultSortDescriptors()
+        _folders = Query(sort: sortDescriptions)
+    }
 
     var body: some View {
         List {
@@ -102,7 +106,6 @@ struct FolderListView: View {
             }
         }
     }
-
 }
 
 #Preview {

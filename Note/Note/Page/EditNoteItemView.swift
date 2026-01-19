@@ -59,6 +59,7 @@ struct EditNoteItemView: View {
         }
         note.content = content
         note.timestamp = Date()
+        note.updateFolderTimestamp()
         self.savedAt = Date()
     }
     
@@ -93,7 +94,6 @@ struct EditNoteItemView: View {
         }
         dismiss()
     }
-    
 }
 
 #Preview {

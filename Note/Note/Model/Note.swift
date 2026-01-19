@@ -29,6 +29,12 @@ final class Note {
         }
     }
     
+    func updateFolderTimestamp() {
+        if let folder = self.folder {
+            folder.timestamp = Date()
+        }
+    }
+    
     func formatDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium

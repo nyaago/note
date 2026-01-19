@@ -36,5 +36,10 @@ final class Folder {
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
     }
+    
+    static func defaultSortDescriptors() -> [SortDescriptor<Folder>] {
+        [SortDescriptor(\.timestamp, order: .reverse)]
+    }
+
 
 }
