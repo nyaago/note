@@ -56,6 +56,7 @@ struct NoteListView: View {
             editToolbarContent
             addToolbarContent
         }
+        .navigationTitle(navigationTitle)
         .navigationDestination(for: Note.self, destination:  { note in
             EditNoteItemView(note: note)
         })
@@ -87,6 +88,15 @@ struct NoteListView: View {
             for index in offsets {
                 modelContext.delete(notes[index])
             }
+        }
+    }
+    
+    private var navigationTitle: String {
+        if let folder = self.folder {
+            return folder.name
+        }
+        else {
+            return "全て"
         }
     }
     
