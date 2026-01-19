@@ -39,4 +39,22 @@ final class Note {
     var isEmpty: Bool {
         content.trimmingCharacters(in: .whitespaces).isEmpty
     }
+    
+    static func predicateForfilteingByFolder(folder: Folder?) -> Predicate<Note> {
+        if let unwrappedFolder = folder {
+            let uuid = unwrappedFolder.uuid
+            return #Predicate<Note> { note in
+                note.folder?.uuid == uuid
+            }
+        }
+        else {
+            return #Predicate<Note> { note in
+                true
+            }
+        }
+    }
+    
+    static func defaultSortDescriptors() -> [SortDescriptor<Note>] {
+        [SortDescriptor(\.timestamp, order: .reverse)]
+    }
 }

@@ -38,14 +38,9 @@ struct NoteListView: View {
     
     init(folder: Folder?) {
         self.folder = folder
-        if let unwrappedFolder = folder {
-            let uuid = unwrappedFolder.uuid
-            let predicate = #Predicate<Note> { $0.folder?.uuid == uuid }
-            _notes = Query(filter: predicate, sort: \Note.timestamp, order: .reverse)
-        }
-        else {
-            _notes = Query(sort: \Note.timestamp, order: .reverse)
-        }
+        let sortDescriptions = Note.defaultSortDescriptors()
+        let predicate = Note.predicateForfilteingByFolder(folder: folder)
+        _notes = Query(filter: predicate, sort: sortDescriptions)
     }
     
     var body: some View {
