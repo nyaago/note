@@ -43,24 +43,11 @@ final class Note {
     }
     
     func formatDate(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        return dateFormatter.string(from: date)
+        DateFormatUtil.formatDate(date: date)
     }
     
     func formatRelativeDate(date: Date) -> String {
-        var formatStyle = Date.RelativeFormatStyle()
-        let now = Date()
-        let elapsedDays = Calendar.current.dateComponents([.day], from: date, to: now).day!
-        if elapsedDays > 2 {
-            formatStyle.presentation = .numeric
-        }
-        else {
-            formatStyle.presentation = .named
-        }
-        formatStyle.unitsStyle = .spellOut
-        return formatStyle.format(date)
+        DateFormatUtil.formatRelativeDate(date: date)
     }
 
     var isEmpty: Bool {
