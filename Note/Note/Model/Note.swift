@@ -25,7 +25,14 @@ final class Note {
     
     var formatedTimestamp: String {
         get {
-            formatDate(date: timestamp)
+            let now = Date()
+            let elapsedDays = Calendar.current.dateComponents([.day], from: timestamp, to: now).day!
+            if elapsedDays > 7 {
+                return formatDate(date: timestamp)
+            }
+            else {
+                return formatRelativeDate(date: timestamp)
+            }
         }
     }
     
@@ -42,6 +49,20 @@ final class Note {
         return dateFormatter.string(from: date)
     }
     
+    func formatRelativeDate(date: Date) -> String {
+        var formatStyle = Date.RelativeFormatStyle()
+        let now = Date()
+        let elapsedDays = Calendar.current.dateComponents([.day], from: date, to: now).day!
+        if elapsedDays > 2 {
+            formatStyle.presentation = .numeric
+        }
+        else {
+            formatStyle.presentation = .named
+        }
+        formatStyle.unitsStyle = .spellOut
+        return formatStyle.format(date)
+    }
+
     var isEmpty: Bool {
         content.trimmingCharacters(in: .whitespaces).isEmpty
     }
