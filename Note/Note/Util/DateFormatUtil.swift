@@ -29,5 +29,4 @@ class DateFormatUtil {
         formatStyle.unitsStyle = .spellOut
         return formatStyle.format(date)
     }
-
 }

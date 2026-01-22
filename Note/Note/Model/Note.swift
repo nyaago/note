@@ -71,4 +71,32 @@ final class Note {
     static func defaultSortDescriptors() -> [SortDescriptor<Note>] {
         [SortDescriptor(\.timestamp, order: .reverse)]
     }
+    
+    static func groupingNotes(notes: [Note]) -> Array<(key: Date, value: Array<Note>)> {
+        let now = Date()
+        let calendar = Calendar.current
+        let recenyDays = 5
+        
+        let dict: Dictionary<Date, [Note]> = Dictionary<Date, [Note]>(grouping: notes) { note in
+            let elapsedDays = calendar.dateComponents([.day], from: note.timestamp, to: now).day!
+            if elapsedDays == 0 {
+                let compornent = calendar.dateComponents([.year, .month, .day], from: now)
+                return calendar.date(from: compornent)!
+            }
+            else if elapsedDays <= recenyDays {
+                let day = calendar.date(byAdding: .day, value: -recenyDays, to: now)!
+                let compornent = calendar.dateComponents([.year, .month, .day], from: day)
+                return calendar.date(from: compornent)!
+            }
+            else {
+                let date = note.timestamp
+                let compornent = calendar.dateComponents([.year], from: date)
+                return calendar.date(from: compornent)!
+            }
+        }
+        let array = dict.sorted(by: {
+            $0.key > $1.key
+        } )
+        return array
+    }
 }

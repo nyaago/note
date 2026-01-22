@@ -22,6 +22,36 @@ struct NoteItemView: View {
     }
 }
 
+struct NoteSection: Identifiable {
+    let id = UUID()
+    let date: Date
+    let notes: [Note]
+    
+    init(date: Date, notes: [Note]) {
+        self.date = date
+        self.notes = notes
+    }
+}
+
+struct NoteSectionView: View {
+    let date: Date
+    var body: some View {
+        Text(formatedDate)
+    }
+    
+    private var formatedDate: String {
+        let now = Date()
+        let elapsedDays = Calendar.current.dateComponents([.day], from: date, to: now).day!
+        if elapsedDays > 30 {
+            return DateFormatUtil.formatDate(date: date)
+        }
+        else {
+            return DateFormatUtil.formatRelativeDate(date: date)
+        }
+    }
+}
+
+
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.navigationRouter) private var navigationRouter
@@ -45,10 +75,14 @@ struct NoteListView: View {
     
     var body: some View {
         List {
-            ForEach(notes) { note in
-                NavigationLink(value :note, label: {
-                    NoteItemView(note: note)
-                })
+            ForEach(groupingNotes)  { group in
+                Section(header: NoteSectionView(date: group.date)) {
+                    ForEach(group.notes) { note in
+                        NavigationLink(value :note, label: {
+                            NoteItemView(note: note)
+                        })
+                    }
+                }
             }
             .onDelete(perform: deleteNotes)
         }
@@ -73,6 +107,7 @@ struct NoteListView: View {
         }
     }
     
+    
     private func addFolder() {
         withAnimation {
             creatingFolder = true
@@ -81,6 +116,15 @@ struct NoteListView: View {
     
     private func doNothing() {
         
+    }
+    
+    private func isTodayNote(note: Note) -> Bool {
+        let now = Date()
+        let elapsedDays = Calendar.current.dateComponents([.day], from: note.timestamp, to: now).day!
+        if elapsedDays == 0 {
+            return true
+        }
+        return false
     }
 
     private func deleteNotes(offsets: IndexSet) {
@@ -117,6 +161,14 @@ struct NoteListView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
+    }
+    
+    private var groupingNotes: Array<NoteSection> {
+        let array: Array<(key: Date, value: Array<Note>)> = Note.groupingNotes(notes: notes)
+        let newArray = array.map( { pair in
+            NoteSection(date: pair.key, notes: pair.value)
+        } )
+        return newArray
     }
 }
 
