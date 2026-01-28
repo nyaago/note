@@ -36,21 +36,20 @@ struct NoteSection: Identifiable {
 struct NoteSectionView: View {
     let date: Date
     var body: some View {
-        Text(formatedDate)
+        Text(formatedDate).modifier(SectionHeaderModifier())
     }
     
     private var formatedDate: String {
         let now = Date()
         let elapsedDays = Calendar.current.dateComponents([.day], from: date, to: now).day!
-        if elapsedDays > 30 {
-            return DateFormatUtil.formatDate(date: date)
+        if elapsedDays > 7 {
+            return DateFormatUtil.formatYear(date: date)
         }
         else {
             return DateFormatUtil.formatRelativeDate(date: date)
         }
     }
 }
-
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
