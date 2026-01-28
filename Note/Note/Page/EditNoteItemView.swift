@@ -41,6 +41,7 @@ struct EditNoteItemView: View {
             .navigationBarBackButtonHidden(true)
             .toolbar(content: {
                 doneToolbarContent
+                menuToolbarContent
             })
     }
     
@@ -51,6 +52,13 @@ struct EditNoteItemView: View {
                 changeNoteContentAndDismiss()
             })
         }
+    }
+    
+    private var menuToolbarContent: some ToolbarContent {
+        return ToolbarItem(placement: .navigationBarTrailing) {
+            menu
+        }
+
     }
     
     private func changeNoteContent() {
@@ -93,6 +101,30 @@ struct EditNoteItemView: View {
             deleteContent()
         }
         dismiss()
+    }
+    
+    private var menu : some View {
+        Menu {
+            Button(
+                action: {
+
+                },
+                label: {
+                    MenuItemLabel(systemImage: "folder", text: "Move")
+                }
+            )
+            Button(
+                action: {
+                    deleteContent()
+                    dismiss()
+                },
+                label: {
+                    MenuItemLabel(systemImage: "trash", text: "Delete")
+                }
+            )
+            } label: {
+                Image(systemName: "ellipsis")
+            }
     }
 }
 
