@@ -96,8 +96,8 @@ struct NoteListView: View {
         .navigationDestination(isPresented: $creatingFolder, destination: {
             NewFolderView()
         })
-
     }
+    
     private func addNote() {
         withAnimation {
             let newItem = Note(content: "", folder: folder)

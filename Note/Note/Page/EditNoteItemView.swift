@@ -9,10 +9,12 @@ import SwiftUI
 
 struct EditNoteItemView: View {
     private var note: Note?
-    @State var content: String
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+
+    @State var content: String
     @State private var savedAt: Date?
+    @State private var isShowMoveFolderSheetView = false
 
     init(note: Note) {
         self.note = note
@@ -43,6 +45,11 @@ struct EditNoteItemView: View {
                 doneToolbarContent
                 menuToolbarContent
             })
+            .sheet(isPresented: $isShowMoveFolderSheetView) {
+                    
+            } content: {
+                MoveNoteSheetView()
+            }
     }
     
     private var doneToolbarContent: some ToolbarContent {
@@ -107,7 +114,7 @@ struct EditNoteItemView: View {
         Menu {
             Button(
                 action: {
-
+                    isShowMoveFolderSheetView = true
                 },
                 label: {
                     MenuItemLabel(systemImage: "folder", text: "Move")
