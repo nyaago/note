@@ -27,6 +27,7 @@ struct MoveSheetItemView: View {
             HStack(spacing: 8) {
                 Image(systemName: "folder")
                 Text(folder.name)
+                Spacer()
             }.modifier(ListItemViewModifier())
         }
     }

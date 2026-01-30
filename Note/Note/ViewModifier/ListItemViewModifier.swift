@@ -15,5 +15,6 @@ struct ListItemViewModifier: ViewModifier {
             .alignmentGuide(.listRowSeparatorLeading) { _ in
                     .zero
             }
+            .contentShape(Rectangle())
     }
 }
