@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditNoteItemView: View {
-    private var note: Note?
+    private var note: Note
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -25,6 +25,7 @@ struct EditNoteItemView: View {
     // preview 用
     init(content: String) {
         self.content = content
+        self.note = Note(content: "Hellow World!", folder: nil)
     }
 
     init() {
@@ -48,7 +49,7 @@ struct EditNoteItemView: View {
             .sheet(isPresented: $isShowMoveFolderSheetView) {
                     
             } content: {
-                MoveNoteSheetView()
+                MoveNoteSheetView(note: self.note)
             }
     }
     
@@ -69,9 +70,6 @@ struct EditNoteItemView: View {
     }
     
     private func changeNoteContent() {
-        guard let note = self.note else {
-            return
-        }
         note.content = content
         note.timestamp = Date()
         note.updateFolderTimestamp()
@@ -89,16 +87,10 @@ struct EditNoteItemView: View {
     }
     
     private func deleteContent() {
-        guard let note = self.note else {
-            return
-        }
         self.modelContext.delete(note)
     }
     
     private var isEmpty: Bool {
-        guard let note = self.note else {
-            return false
-        }
         return note.isEmpty
     }
     

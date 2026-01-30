@@ -37,11 +37,14 @@ struct MoveNoteSheetView: View {
     @Environment(\.navigationRouter) private var navigationRouter
     @Environment(\.dismiss) private var dismiss
    
+    let note: Note
+    
     @Query private var folders: [Folder]
 
-    init() {
+    init(note: Note) {
         let sortDescriptions = Folder.defaultSortDescriptors()
         _folders = Query(sort: sortDescriptions)
+        self.note = note
     }
 
     var body: some View {
@@ -50,14 +53,19 @@ struct MoveNoteSheetView: View {
                 MoveSheetItemView(folder: folder)
                 .onTapGesture {
                     print("folder \(folder.name)")
+                    moveNoteFolder(folder)
                     navigationRouter.path = NavigationPath()
                 }
             }
         }
     }
+    
+    private func moveNoteFolder(_ folder: Folder) {
+        note.folder = folder
+    }
 }
 
 #Preview {
-    MoveNoteSheetView()
+    MoveNoteSheetView(note: Note(content: "Hello, World!", folder: nil))
         .modelContainer(SampleFolder.previewContainer)
 }
