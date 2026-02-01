@@ -33,6 +33,7 @@ struct FolderListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.navigationRouter) private var navigationRouter
     
+    @State var editMode: EditMode = .inactive
     @State private var creatingFolder = false
     
     @Query private var folders: [Folder]
@@ -52,6 +53,7 @@ struct FolderListView: View {
                     FolderItemView(folder: folder)
                 })
             }
+            .onDelete(perform: deleteFolders)
         }
         .toolbar {
             editToolbarContent
@@ -70,6 +72,7 @@ struct FolderListView: View {
         .navigationDestination(isPresented: $creatingFolder, destination: {
             NewFolderView()
         })
+        .environment(\.editMode, self.$editMode)
     }
     
     private func addNote() {
@@ -86,9 +89,25 @@ struct FolderListView: View {
         }
     }
     
+    private func deleteFolders(offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+            }
+        }
+    }
+
+    
     private var editToolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            EditButton()
+            if self.editMode.isEditing {
+                Button(action: doneEditing) {
+                    Label("Done", systemImage: "checkmark")
+                        
+                }
+            }
+            else {
+                editMenu
+            }
         }
     }
     
@@ -105,6 +124,29 @@ struct FolderListView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
+    }
+    
+    private var editMenu : some View {
+        Menu {
+            Button(
+                action: {
+                    startEditing()
+                },
+                label: {
+                    MenuItemLabel(text: "Edit Folders")
+                }
+            )
+            } label: {
+                Image(systemName: "ellipsis")
+            }
+    }
+    
+    private func startEditing() {
+        editMode = .active
+    }
+    
+    private func doneEditing() {
+        editMode = .inactive
     }
 }
 
