@@ -89,7 +89,12 @@ struct EditNoteItemView: View {
     private func deleteContent() {
         self.modelContext.delete(note)
     }
-    
+
+    private func deleteContentAndDismiss() {
+        deleteContent()
+        dismiss()
+    }
+
     private var isEmpty: Bool {
         return note.isEmpty
     }
@@ -102,11 +107,16 @@ struct EditNoteItemView: View {
         dismiss()
     }
     
+    private func showMoveFolderSheetView()  {
+        changeNoteContent()
+        isShowMoveFolderSheetView = true
+    }
+    
     private var menu : some View {
         Menu {
             Button(
                 action: {
-                    isShowMoveFolderSheetView = true
+                    showMoveFolderSheetView()
                 },
                 label: {
                     MenuItemLabel(systemImage: "folder", text: "Move")
@@ -114,8 +124,7 @@ struct EditNoteItemView: View {
             )
             Button(
                 action: {
-                    deleteContent()
-                    dismiss()
+                    deleteContentAndDismiss()
                 },
                 label: {
                     MenuItemLabel(systemImage: "trash", text: "Delete")
