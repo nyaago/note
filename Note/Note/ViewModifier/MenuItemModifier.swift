@@ -12,7 +12,6 @@ struct MenuItemModifier: ViewModifier {
         content
             .font(.headline)
             .padding(.leading, 32)
-            .foregroundColor(.white)
             .background(Color.blue)
             .cornerRadius(10)
     }
