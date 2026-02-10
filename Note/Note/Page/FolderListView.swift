@@ -8,8 +8,22 @@
 import SwiftUI
 import SwiftData
 
+@Observable
+class RenameFolderModelView {
+    var folder: Folder?
+}
+
 struct FolderEditItemView: View {
     let folder: Folder
+    @Environment(\.modelContext) private var modelContext
+    @Bindable private var renameFolderModelView: RenameFolderModelView
+    @Binding var isShowRenameFolderSheetView: Bool
+
+    init(folder: Folder, renameFolderModelView: RenameFolderModelView, isShowRenameFolderSheetView: Binding<Bool> ) {
+        self.folder = folder
+        self.renameFolderModelView = renameFolderModelView
+        self._isShowRenameFolderSheetView = isShowRenameFolderSheetView
+    }
     
     var body: some View {
         HStack(alignment: .center) {
@@ -24,7 +38,7 @@ struct FolderEditItemView: View {
         Menu {
             Button(
                 action: {
-                    
+                    renameFolder()
                 },
                 label: {
                     MenuItemLabel(systemImage: "pencil", text: "Rename")
@@ -33,7 +47,7 @@ struct FolderEditItemView: View {
             Button(
                 role: .destructive,
                 action: {
-                    
+                    deleteFolder()
                 },
                 label: {
                     MenuItemLabel(systemImage: "trash", text: "Remove")
@@ -42,6 +56,17 @@ struct FolderEditItemView: View {
             } label: {
                 Image(systemName: "ellipsis")
             }
+    }
+    
+    private func deleteFolder() {
+        withAnimation {
+            self.modelContext.delete(folder)
+        }
+    }
+    
+    private func renameFolder() {
+        renameFolderModelView.folder = self.folder
+        isShowRenameFolderSheetView = true
     }
 }
 
@@ -77,6 +102,9 @@ struct FolderListView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.navigationRouter) private var navigationRouter
+    @State private var isShowRenameFolderSheetView = false
+    @State private var editingFolder: Folder? = nil
+    @State private var renameFolderModelView: RenameFolderModelView = RenameFolderModelView()
     
     @State var editMode: ListEditMode = .inactive
     @State private var creatingFolder = false
@@ -86,6 +114,7 @@ struct FolderListView: View {
     init() {
         let sortDescriptions = Folder.defaultSortDescriptors()
         _folders = Query(sort: sortDescriptions)
+        renameFolderModelView = RenameFolderModelView()
     }
 
     var body: some View {
@@ -95,7 +124,7 @@ struct FolderListView: View {
             })
             ForEach(folders) { folder in
                 if self.editMode == .active {
-                    FolderEditItemView(folder: folder)
+                    FolderEditItemView(folder: folder, renameFolderModelView: renameFolderModelView, isShowRenameFolderSheetView: $isShowRenameFolderSheetView)
                 }
                 else {
                     NavigationLink(value :folder, label: {
@@ -122,6 +151,11 @@ struct FolderListView: View {
         .navigationDestination(isPresented: $creatingFolder, destination: {
             NewFolderView()
         })
+        .sheet(isPresented: $isShowRenameFolderSheetView) {
+            
+            RenameFolderSheetView(folder: renameFolderModelView.folder!)
+                .presentationDetents([.fraction(0.3)])
+        }
     }
     
     private func addNote() {
@@ -137,16 +171,6 @@ struct FolderListView: View {
             creatingFolder = true
         }
     }
-    
-    /*
-    private func deleteFolders(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-            }
-        }
-    }
-     */
-
     
     private var editToolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
